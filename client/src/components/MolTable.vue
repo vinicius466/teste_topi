@@ -5,14 +5,14 @@
             <p>Essa aplicação tem a finalidade de exibir uma grade com os repositórios mais marcados de uma linguagem no github.</p>
         </div>
         <div class="row">
-            <div class="col-8 mx-auto repositories-list">
+            <div class="col-lg-8 col-md-12 col-sm-12 mx-auto repositories-list">
                 <div class="form-row">
-                    <div class="form-group col-4">
+                    <div class="form-group col-4 col-md-8 col-sm-12 col-12 search">
                         <label for="language">Linguagem:</label>
                         <input class="form-control" id="language" v-model="language" placeholder="Pesquisa">
                         <button class="btn btn-primary" @click="searchLanguage()">Pesquisar</button>
                     </div>
-                    <div class="form-group form-group__center col-4">
+                    <div class="form-group form-group__center col-lg-4 col-md-6 col-sm-6 col-6">
                         <select v-model="sort" class="custom-select form-control">
                             <option disabled selected value="">Ordenar por</option>
                             <option value="updated">Data de atualização</option>
@@ -20,7 +20,7 @@
                             <option value="forks">Cópias</option>
                         </select>
                     </div>
-                    <div class="form-group form-group__flex-end col-4">
+                    <div class="form-group form-group__flex-end col-lg-4 col-md-6 col-sm-6 col-6">
                         <label>
                             Resultados por página:
                             <select v-model="per_pages" class="custom-select form-control">
@@ -36,14 +36,14 @@
                     <div class="card" v-for="n in this.page" :key="n">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-3 img-user">
+                                <div class="col-lg-3 col-md-3 col-sm-4 col-6 img-user">
                                     <a :href="repositories.items[n - 1 + index].owner.html_url" target="_blank">
                                         <figure>
                                             <img :src="repositories.items[n - 1 + index].owner.avatar_url" alt="Logo user">
                                         </figure>
                                     </a>
                                 </div>
-                                <div class="col-8 inf-user">
+                                <div class="col-lg-8 col-6 inf-user">
                                     <a class="repository-name" :href="repositories.items[n - 1 + index].html_url" target="_blank">{{ repositories.items[n - 1 + index].owner.login }} / <strong>{{ repositories.items[n - 1 + index].name }}</strong></a>
                                     <p>{{ repositories.items[n - 1 + index].description }}</p>
                                     <div class="counts">
@@ -98,15 +98,30 @@ export default {
             }).catch(errors => this.repositories = errors)
         },
         pagination() {
-            this.page = parseInt(this.per_pages);
+            let pagination = parseInt(this.per_pages);
+            this.page = pagination;
 
             if(this.index + this.page == 100) {
                 document.getElementById("next").disabled = true;
                 document.getElementById("previous").disabled = true;
             }
-            else if(this.index - this.page <= 0) {
+            else if(pagination - this.page <= 0) {
                 document.getElementById("previous").disabled = true;
                 document.getElementById("next").disabled = false;
+            }
+
+            if(pagination == 10) {
+                this.index = 0;
+            }
+            else if(pagination == 20) {
+                this.index = 0;
+            }
+            else if(pagination == 50) {
+                this.index = 0;
+            }
+            else {
+                this.index = 0;
+                document.getElementById("next").disabled = true;
             }
         },
         next() {
@@ -114,20 +129,21 @@ export default {
 
             setTimeout($('html, body').animate({scrollTop:0}, 'slow'), 3000);
             this.page = parseInt(this.per_pages)
+
             if(pagination == 10) {
-                this.index += pagination;
+                this.index += 10;
             }
             else if(pagination == 20) {
-                this.index += pagination;
+                this.index += 20;
             }
             else if(pagination == 50) {
-                this.index += pagination;
+                this.index += 50;
             }
 
-            if(this.index + this.page == 100) {
+            if(this.index + pagination == 100) {
                 document.getElementById("next").disabled = true;
             }
-            if(this.index + this.page - pagination > 0) {
+            if(this.index - pagination >= 0) {
                 document.getElementById("previous").disabled = false;
             }
         },
@@ -137,10 +153,10 @@ export default {
             this.index -= pagination;
             setTimeout($('html, body').animate({scrollTop:0}, 'slow'), 3000);
 
-            if (this.index + this.page - pagination <= 0) {
+            if (this.index - pagination < 0) {
                 document.getElementById("previous").disabled = true;
             }
-            if (this.index + this.page != 100) {
+            if (this.index != 100) {
                 document.getElementById("next").disabled = false;
             }
         },
@@ -178,6 +194,7 @@ export default {
                 flex-wrap: wrap;
                 align-items: flex-end;
                 justify-content: space-between;
+
                 label {
                    margin: 0;
 
@@ -258,6 +275,52 @@ export default {
 
                 button {
                     margin-left: 15px;
+                }
+            }
+            @media(max-width: 991px) {
+                .search {
+                    justify-content: flex-start;
+                    align-items: center;
+                    margin: 0 0 15px 0;
+
+                    label {
+                        width: auto;
+                        margin-right: 15px;
+                    }
+                    .form-control {
+                        margin-right: 15px;
+                    }
+                }
+
+                .form-group {
+                    &__center {
+                        justify-content: flex-start;
+                    }
+                    &__flex-end {
+                        justify-content: flex-end;
+
+                        label {
+                            width: 70%;
+                        }
+                    }
+                }
+            }
+            @media(max-width: 767px) {
+                .form-group {
+                    &__flex-end {
+                        label {
+                            width: 95%;
+                        }
+                    }
+                }
+            }
+            @media(max-width: 575px) {
+                .form-group {
+                    &__flex-end {
+                        label {
+                            width: 89%;
+                        }
+                    }
                 }
             }
         }
