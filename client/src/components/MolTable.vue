@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-lg-8 col-md-12 col-sm-12 mx-auto repositories-list">
                 <div class="form-row">
-                    <div class="form-group col-4 col-md-8 col-sm-12 col-12 search">
+                    <div class="form-group col-lg-4 col-md-8 col-sm-12 col-12 search">
                         <label for="language">Linguagem:</label>
                         <input class="form-control" id="language" v-model="language" placeholder="Pesquisa">
                         <button class="btn btn-primary" @click="searchLanguage()">Pesquisar</button>
